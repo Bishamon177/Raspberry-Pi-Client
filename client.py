@@ -38,14 +38,15 @@ def send_video():
     while True:
         # Capture a frame
         im = picam2.capture_array()
+        im = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
 
         # Encode the frame as JPEG
-        _, buffer = cv2.imencode(".png", im)
-        png_encoded = base64.b64encode(buffer).decode("utf-8")
+        _, buffer = cv2.imencode(".jpg", im)
+        jpg_encoded = base64.b64encode(buffer).decode("utf-8")
 
         # Send the frame over Socket.IO
-        sio.emit("video_frame", png_encoded)
-        time.sleep(1)
+        sio.emit("video_frame", jpg_encoded)
+        time.sleep(0.5)
 
     picam2.stop()
     sio.disconnect()
